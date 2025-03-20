@@ -6,7 +6,7 @@ import { useTheme } from '../../context/themeContext';
 import { useModal } from '../../context/modalContext';
 
 export default function SelectLanguage() {
-    const [options, setOptions] = useOption();
+    const [, setOptions] = useOption();
     const [theme, ] = useTheme()
     const [,setModalState] = useModal()
 
@@ -19,7 +19,7 @@ export default function SelectLanguage() {
         <h4 className={`fw-bold fst-italic border-bottom text-center pb-4 ${theme === 'light' ? 'border-dark' : 'border-light'}`}>Select Language</h4>
         {
             languages.map((lang, index) => (
-                <button key={index} onClick={() => {setOptions((prev :Option)=>({...prev, language: lang.param})); setModalState((prev) => ({...prev, isLanguageOpen: false })); console.log(options) } } className='list-button p-2'>{lang.language}</button>
+                <button key={index} onClick={() => {setOptions((prev :Option)=>({...prev, language: lang.param})); setModalState((prev) => ({...prev, isLanguageOpen: false })); } } className='list-button p-2'>{lang.language}</button>
                 )
             )
         }

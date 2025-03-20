@@ -4,7 +4,7 @@ export async function generateWord(quantity: number, language: string, punctuati
     let url = `https://random-word-api.herokuapp.com/word?number=${quantity}&lang=${language}`;
 
     if (language === 'en') {
-        url = `https://random-word-api.herokuapp.com/word?number=${quantity}`;
+        url = `https://random-word-api.vercel.app/api?words=${quantity}`;
     }
 
     const words = await fetch(url)
@@ -58,4 +58,4 @@ function generateNumbers(quantity: number): string {
     return numbers;
 }
 
-console.log(await generateWord(5, "en", true, true, true));
+// console.log(await generateWord(5, "en", true, true, true));
