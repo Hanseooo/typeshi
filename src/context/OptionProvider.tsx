@@ -7,7 +7,7 @@ export default function OptionProvider({children} : {children : React.ReactNode}
         capitalization: false,
         numbers: false,
         time: 30,
-        words: 30,
+        words: 100,
         language: "en"
     })
     

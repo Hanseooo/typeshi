@@ -54,7 +54,7 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import OptionBtnGroup from './ui/OptionBtnGroup';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function TextBox() {
   const [typedText, setTypedText] = useState('');
@@ -69,12 +69,23 @@ export default function TextBox() {
   // const words = sampleText.split(' ').map((word, index, array) => 
   //   index < array.length - 1 ? word + ' ' : word
   // );
+
+  const wordCountRef = useRef(30)
+
+  useEffect(() => {
+    const width = window.innerWidth
+    if (width <= 520) wordCountRef.current = 30
+    else if (width <= 720) wordCountRef.current = 45
+    else if (width <= 980) wordCountRef.current = 55
+    else wordCountRef.current = 65
+  }, [])
+
   const words = sampleText.split(' ');
   const groupedWords: string[] = [];
   let currentString = '';
 
   for (const word of words) {
-    if (currentString.length + word.length + 1 <= 45) {
+    if (currentString.length + word.length + 1 <= wordCountRef.current) {
         currentString += (currentString ? ' ' : '') + word; 
     } else {
 
@@ -96,10 +107,14 @@ export default function TextBox() {
   }
 
 
+
+
   // console.log(typedText)
   // console.log(lineIndex)
   // console.log(`${groupedInputs[lineIndex]} \n ${typedText}`)
   console.log(groupedWords)
+  console.log(wordCountRef.current)
+
 
   
   return (
@@ -164,10 +179,10 @@ export default function TextBox() {
         })
       }
     </span>}
-    {lineIndex != groupedWords.length - 2 && groupedWords[lineIndex + 2] && <span className='inactive-state'>
+    {lineIndex != groupedWords.length - 1 && groupedWords[lineIndex + 1] && <span className='inactive-state display-text'>
       {groupedWords[lineIndex + 1]}
     </span>}
-    {lineIndex != groupedWords.length - 3 && groupedWords[lineIndex + 3] && <span className='inactive-state'>
+    {lineIndex != groupedWords.length - 2 && groupedWords[lineIndex + 2] && <span className='inactive-state display-text'>
       {groupedWords[lineIndex + 2]}
     </span>}
   </p>
