@@ -59,7 +59,7 @@ import { useRef, useState } from 'react';
 export default function TextBox() {
   const [typedText, setTypedText] = useState('');
   const [lineIndex, setLineIndex] = useState(0);
-  const [groupedInputs, setGroupedInputs] = useState('')
+  const [groupedInputs, setGroupedInputs] = useState([''])
   // const [groupedWords, setGroupedWords] = useState<string[]>([])
   
   const textboxRef = useRef<HTMLDivElement>(null);
@@ -77,17 +77,17 @@ export default function TextBox() {
     if (currentString.length + word.length + 1 <= 45) {
         currentString += (currentString ? ' ' : '') + word; 
     } else {
-        // Append a space to the last word before pushing to groupedWords
-        groupedWords.push(currentString + ' '); // Add a space here
+
+        groupedWords.push(currentString + ' '); 
 
         currentString = word; 
     }
 }
 
-// After the loop, ensure to add the last currentString with a space if it exists
-if (currentString) {
-    groupedWords.push(currentString + ' '); // Add a space here as well
-}
+
+// if (currentString) {
+//     groupedWords.push(currentString + ' '); 
+// }
 
 
   if (currentString) {
@@ -95,8 +95,11 @@ if (currentString) {
     groupedWords.push(currentString);
   }
 
-  console.log(typedText)
-  console.log(lineIndex)
+
+  // console.log(typedText)
+  // console.log(lineIndex)
+  // console.log(`${groupedInputs[lineIndex]} \n ${typedText}`)
+  console.log(groupedWords)
 
   
   return (
@@ -113,12 +116,22 @@ if (currentString) {
           autoFocus 
           value={typedText}
           onChange={e => setTypedText(e.target.value)}
+          onPaste={(e) => {e.preventDefault()}}
+          spellCheck = {false}
+          onKeyDown={e => {
+            if (e.key === 'Backspace' && typedText.length === 0 && lineIndex >= 1) {
+              setGroupedInputs(prev => prev.filter(item => item !== prev[lineIndex] ))
+              setLineIndex(prev => prev - 1);
+              setTypedText(groupedInputs[lineIndex-1].substring(0, groupedInputs[lineIndex-1].length-1));
+              // console.log(`line index: ${lineIndex} \ntyped text: ${groupedInputs[lineIndex-1]}`)
+            }
+          }}
           onMouseDown={(e) => {
-            e.preventDefault(); // Prevent default behavior
-            const inputElement = e.currentTarget; // Get the input element
-            inputElement.focus(); // Focus the input
-            const length = typedText.length; // Get the length of typedText
-            inputElement.setSelectionRange(length, length); // Set caret to the end
+            e.preventDefault(); 
+            const inputElement = e.currentTarget; 
+            inputElement.focus(); 
+            const length = typedText.length; 
+            inputElement.setSelectionRange(length, length); 
         }} 
         />
 {
@@ -131,6 +144,10 @@ if (currentString) {
           const isTypedChar = i < typedText.length && typedText[i] === char;
           const lineLength:number = groupedWords[lineIndex].length;
           if (typedText.length === lineLength) {
+            setGroupedInputs(() => {
+              groupedInputs[lineIndex] = typedText
+              return [...groupedInputs];
+            })
             setLineIndex(lineIndex + 1)
             setTypedText('');
           }
@@ -138,8 +155,8 @@ if (currentString) {
             <span
               key={i}
               className={isCurrentChar 
-                ? 'current-char' 
-                : (isTypedChar ? 'typed-char' : (i < typedText.length ? 'error-char' : 'inactive-state'))} //todo: add styling if correct
+                ? 'current-char inactive-state' 
+                : (isTypedChar ? 'typed-char' : (i < typedText.length ? (char === ' ' ? 'error-space' : 'error-char') : 'inactive-state'))}
             >
               {char}
             </span>
@@ -147,10 +164,10 @@ if (currentString) {
         })
       }
     </span>}
-    {lineIndex != groupedWords.length - 1 && groupedWords[lineIndex + 1] && <span className='inactive-state'>
+    {lineIndex != groupedWords.length - 2 && groupedWords[lineIndex + 2] && <span className='inactive-state'>
       {groupedWords[lineIndex + 1]}
     </span>}
-    {lineIndex != groupedWords.length - 2 && groupedWords[lineIndex + 2] && <span className='inactive-state'>
+    {lineIndex != groupedWords.length - 3 && groupedWords[lineIndex + 3] && <span className='inactive-state'>
       {groupedWords[lineIndex + 2]}
     </span>}
   </p>
