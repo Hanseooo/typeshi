@@ -21,14 +21,14 @@ export default  function TextBox() {
 
   const wordCountRef = useRef(45)
 
-  useEffect(() => {
-    const width = window.innerWidth
-    if (width <= 420) wordCountRef.current = 15
-    else if (width <= 520) wordCountRef.current = 30
-    else if (width <= 720) wordCountRef.current = 45
-    else if (width <= 980) wordCountRef.current = 65
-    else wordCountRef.current = 75
-  }, [])
+  // useEffect(() => {
+  //   const width = window.innerWidth
+  //   if (width <= 420) wordCountRef.current = 15
+  //   else if (width <= 520) wordCountRef.current = 30
+  //   else if (width <= 720) wordCountRef.current = 45
+  //   else if (width <= 980) wordCountRef.current = 65
+  //   else wordCountRef.current = 75
+  // }, [])
 
   const generateRandomWords = useCallback(async () => {
       const words = await generateWord( options.words, options.language, options.punctuation, options.numbers, options.capitalization )
@@ -61,6 +61,12 @@ export default  function TextBox() {
     setGroupedInputs([])
     setLineIndex(0)
     setTypedText('')
+    const width = window.innerWidth
+    if (width <= 420) wordCountRef.current = 15
+    else if (width <= 520) wordCountRef.current = 30
+    else if (width <= 720) wordCountRef.current = 45
+    else if (width <= 980) wordCountRef.current = 65
+    else wordCountRef.current = 75
   }, [options.words, options.language, options.punctuation, options.numbers, options.capitalization])
 
 
